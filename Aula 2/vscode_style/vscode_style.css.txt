@@ -1,0 +1,12 @@
+body{
+pointer-events: auto !important;
+background-size: 100% !important;
+opacity: 0.90 !important;
+background-position: 0 0 !important;
+background-image: url('https://acdn-us.mitiendanube.com/stores/002/767/708/products/cenarios-personagens-fundo-fotografico-rei-leao-em-tecido-ffa-505-p-16572255772941-f090c2a8706b57522a16855419247879-1024-1024.jpg');
+content: '';
+position: absolute;
+z-index: 999;
+width: 100%;
+background-repeat: no-repeat;
+}

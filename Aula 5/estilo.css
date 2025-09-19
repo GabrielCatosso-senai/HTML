@@ -1,0 +1,43 @@
+/*= Aplica a todos os elementos */
+*{
+    margin: 70;
+    padding: 70;
+    box-sizing:border-box ;
+}
+
+.destaque{ 
+    color:rgb(0, 127, 238);
+    font-weight: bold;
+}
+
+#titulo-principal{
+    color:rgb(231, 0, 69);
+    text-align: center;
+}
+
+p{
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+h1, h2, h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    color: rgb(68, 255, 0);
+}
+h4{
+    line-height: 1.5;
+    letter-spacing: 2px;
+    word-spacing: 5px;
+}
+img {
+    width: 300px;
+    height: auto;
+    border: 2px solid black;
+    display: block;
+    margin: auto;
+}
+ul {
+    list-style-type: circle;
+    color:red
+}
+

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Boneco Controlável com Obstáculos</title>
+  <style>
+    body {
+      margin: 0;
+      background: linear-gradient(to top, #87ceeb 50%, #228b22 50%);
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .boneco {
+      position: absolute;
+      bottom: 50px;
+      left: 100px;
+      width: 50px;
+      height: 120px;
+      transition: transform 0.1s linear;
+    }
+
+    .cabeca {
+      width: 40px;
+      height: 40px;
+      background: #ffcc99;
+      border-radius: 50%;
+      margin: 0 auto;
+    }
+
+    .corpo {
+      width: 15px;
+      height: 50px;
+      background: #111a5e;
+      margin: 0 auto;
+    }
+
+    .braco {
+      width: 15px;
+      height: 40px;
+      background: #ffcc99;
+      position: absolute;
+      top: 40px;
+      transform-origin: top center;
+    }
+
+    .braco.esq { left: -20px; }
+    .braco.dir { right: -20px; }
+
+    .perna {
+      width: 15px;
+      height: 50px;
+      background: #000000;
+      position: absolute;
+      top: 90px;
+      transform-origin: top center;
+    }
+
+    .perna.esq { left: 5px; }
+    .perna.dir { right: 5px; }
+
+    /* Animações */
+    .andando .braco.esq,
+    .andando .perna.esq {
+      animation: passo 0.5s infinite alternate;
+    }
+
+    .andando .braco.dir,
+    .andando .perna.dir {
+      animation: passo 0.5s infinite alternate;
+      animation-delay: 0.25s;
+    }
+
+    @keyframes passo {
+      from { transform: rotate(30deg); }
+      to   { transform: rotate(-30deg); }
+    }
+
+    /* Obstáculos */
+    .obstaculo {
+      position: absolute;
+      bottom: 50px;
+      width: 40px;
+      height: 40px;
+      background: rgb(255, 0, 0);
+    }
+  </style>
+</head>
+<body>
+  <div class="boneco" id="boneco">
+    <div class="cabeca"></div>
+    <div class="corpo"></div>
+    <div class="braco esq"></div>
+    <div class="braco dir"></div>
+    <div class="perna esq"></div>
+    <div class="perna dir"></div>
+  </div>
+
+  <div class="obstaculo" style="left: 400px;"></div>
+  <div class="obstaculo" style="left: 700px;"></div>
+  <div class="obstaculo" style="left: 1000px;"></div>
+
+  <script>
+    const boneco = document.getElementById("boneco");
+    let posX = 100;
+    let posY = 0;
+    let pulando = false;
+
+    // mover esquerda/direita
+    function mover(direcaoX) {
+      posX += direcaoX * 5;
+      if (posX < 0) posX = 0;
+      if (posX > window.innerWidth - 60) posX = window.innerWidth - 60;
+
+      boneco.style.left = posX + "px";
+      boneco.style.transform = direcaoX < 0 ? "scaleX(-1)" : "scaleX(1)";
+    }
+
+    // pular
+    function pular() {
+      if (pulando) return;
+      pulando = true;
+      let altura = 0;
+      let subindo = true;
+
+      const intervalo = setInterval(() => {
+        if (subindo) {
+          altura += 10;
+          if (altura >= 300) subindo = false;
+        } else {
+          altura -= 10;
+          if (altura <= 0) {
+            altura = 0;
+            pulando = false;
+            clearInterval(intervalo);
+          }
+        }
+        posY = altura;
+        boneco.style.bottom = (50 + posY) + "px";
+        verificarColisao();
+      }, 30);
+    }
+
+    // detectar colisão
+    function verificarColisao() {
+      const bonecoRect = boneco.getBoundingClientRect();
+      const obstaculos = document.querySelectorAll(".obstaculo");
+
+      obstaculos.forEach(obs => {
+        const obsRect = obs.getBoundingClientRect();
+
+        if (
+          bonecoRect.left < obsRect.right &&
+          bonecoRect.right > obsRect.left &&
+          bonecoRect.bottom > obsRect.top &&
+          bonecoRect.top < obsRect.bottom
+        ) {
+          alert("💀 Game Over!");
+          window.location.reload();
+        }
+      });
+    }
+
+    // controle teclado
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight") {
+        mover(1);
+        boneco.classList.add("andando");
+        verificarColisao();
+      }
+      if (e.key === "ArrowLeft") {
+        mover(-1);
+        boneco.classList.add("andando");
+        verificarColisao();
+      }
+      if (e.key === " ") {
+        pular();
+      }
+    });
+
+    document.addEventListener("keyup", () => {
+      boneco.classList.remove("andando");
+    });
+  </script>
+</body>
+</html>
